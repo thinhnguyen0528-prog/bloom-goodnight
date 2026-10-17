@@ -15,7 +15,7 @@
     />
     <meta property="og:type" content="website" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="theme-color" content="#4E7262" id="theme-color-meta" />
+    <meta name="theme-color" content="#080D24" id="theme-color-meta" />
 
     <!-- Google Fonts: Plus Jakarta Sans & JetBrains Mono (Full Vietnamese Support) -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -27,23 +27,27 @@
 
     <style>
       :root {
-        --bg-sage-top: #557b6a;
-        --bg-sage-mid: #4c7060;
-        --bg-sage-bottom: #3d5c4e;
-        --bg-night-top: #070c1a;
-        --bg-night-mid: #0f172a;
-        --bg-night-bottom: #17233f;
+        --galaxy-navy: #080d24;
+        --galaxy-indigo: #171735;
+        --galaxy-purple: #30204f;
+        --soft-pink: #ffb6d5;
+        --warm-white: #fff5f8;
+        --lavender-glow: #a88bff;
 
-        --glass-bg: rgba(15, 23, 42, 0.75);
-        --glass-bg-soft: rgba(15, 23, 42, 0.68);
-        --glass-border: rgba(255, 255, 255, 0.12);
-        --glass-highlight: rgba(255, 255, 255, 0.22);
+        --bg-night-top: #050817;
+        --bg-night-mid: #080d24;
+        --bg-night-bottom: #171735;
 
-        --text-primary: #f8fafc;
-        --text-secondary: rgba(241, 245, 249, 0.86);
-        --text-muted: rgba(226, 232, 240, 0.68);
+        --glass-bg: rgba(15, 18, 42, 0.72);
+        --glass-bg-soft: rgba(23, 23, 53, 0.66);
+        --glass-border: rgba(255, 182, 213, 0.18);
+        --glass-highlight: rgba(168, 139, 255, 0.34);
 
-        --accent-pink: #f48fb1;
+        --text-primary: #fff5f8;
+        --text-secondary: rgba(255, 245, 248, 0.88);
+        --text-muted: rgba(255, 182, 213, 0.74);
+
+        --accent-pink: #ffb6d5;
         --accent-coral: #f0597a;
         --accent-warm: #ffd166;
         --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
@@ -64,12 +68,12 @@
         overflow-x: hidden;
         font-family: 'Plus Jakarta Sans', sans-serif;
         color: var(--text-primary);
-        background-color: var(--bg-sage-mid);
+        background-color: var(--galaxy-navy);
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
       }
 
-      /* Background Layer System for Smooth Day-to-Night Transition */
+      /* Layered Galaxy & Nebula Background System */
       .scene-backgrounds {
         position: fixed;
         inset: 0;
@@ -85,29 +89,59 @@
       }
 
       .bg-sage {
-        background: radial-gradient(
-            circle at 50% 34%,
-            rgba(116, 158, 138, 0.42) 0%,
-            rgba(78, 114, 98, 0.15) 48%,
-            transparent 75%
+        background:
+          radial-gradient(
+            circle at 28% 24%,
+            rgba(168, 139, 255, 0.22) 0%,
+            rgba(48, 32, 79, 0.18) 38%,
+            transparent 68%
           ),
-          linear-gradient(180deg, var(--bg-sage-top) 0%, var(--bg-sage-mid) 52%, var(--bg-sage-bottom) 100%);
+          radial-gradient(
+            circle at 72% 32%,
+            rgba(255, 182, 213, 0.18) 0%,
+            rgba(168, 139, 255, 0.1) 42%,
+            transparent 70%
+          ),
+          radial-gradient(
+            ellipse at 50% 55%,
+            rgba(48, 32, 79, 0.65) 0%,
+            rgba(23, 23, 53, 0.4) 55%,
+            transparent 85%
+          ),
+          linear-gradient(
+            180deg,
+            var(--galaxy-navy) 0%,
+            var(--galaxy-indigo) 50%,
+            var(--galaxy-purple) 100%
+          );
         opacity: 1;
       }
 
       .bg-night {
-        background: radial-gradient(
-            circle at 50% 30%,
-            rgba(56, 189, 248, 0.09) 0%,
-            rgba(244, 114, 182, 0.07) 36%,
+        background:
+          radial-gradient(
+            circle at 50% 34%,
+            rgba(168, 139, 255, 0.26) 0%,
+            rgba(255, 182, 213, 0.16) 36%,
             transparent 70%
           ),
-          linear-gradient(180deg, var(--bg-night-top) 0%, var(--bg-night-mid) 54%, var(--bg-night-bottom) 100%);
+          radial-gradient(
+            circle at 80% 18%,
+            rgba(255, 245, 248, 0.1) 0%,
+            transparent 50%
+          ),
+          linear-gradient(
+            180deg,
+            var(--bg-night-top) 0%,
+            var(--galaxy-navy) 48%,
+            var(--galaxy-indigo) 82%,
+            var(--galaxy-purple) 100%
+          );
         opacity: 0;
       }
 
       body.is-night .bg-sage {
-        opacity: 0;
+        opacity: 0.25;
       }
 
       body.is-night .bg-night {
@@ -124,22 +158,23 @@
         pointer-events: none;
       }
 
-      /* Night Sky SVG Layer (Crescent Moon & Twinkling Constellation) */
+      /* Night Sky SVG Layer (Crescent Moon & Nebula Glow - Always Visible in Galaxy Theme) */
       .night-sky-decor {
         position: fixed;
         inset: 0;
         z-index: 1;
         pointer-events: none;
-        opacity: 0;
-        transform: translateY(14px);
+        opacity: 0.9;
+        transform: translateY(0);
         transition:
           opacity 2.4s cubic-bezier(0.22, 1, 0.36, 1),
-          transform 2.4s cubic-bezier(0.22, 1, 0.36, 1);
+          transform 2.4s cubic-bezier(0.22, 1, 0.36, 1),
+          filter 2.4s ease;
       }
 
       body.is-night .night-sky-decor {
         opacity: 1;
-        transform: translateY(0);
+        filter: drop-shadow(0 0 18px rgba(255, 182, 213, 0.35));
       }
 
       .crescent-moon-wrapper {
@@ -148,7 +183,8 @@
         right: clamp(1.5rem, 8vw, 7rem);
         width: clamp(64px, 9vw, 92px);
         height: clamp(64px, 9vw, 92px);
-        filter: drop-shadow(0 0 24px rgba(254, 243, 199, 0.45));
+        filter: drop-shadow(0 0 28px rgba(255, 245, 248, 0.55))
+          drop-shadow(0 0 54px rgba(168, 139, 255, 0.4));
         animation: moonFloat 7s ease-in-out infinite alternate;
       }
 
@@ -278,22 +314,23 @@
         }
       }
 
-      /* Ambient Radial Aura Behind Bouquet */
+      /* Ambient Radial Aura Behind Bouquet (Soft Pink & Lavender Galaxy Glow) */
       .bouquet-aura {
         position: absolute;
-        width: 78%;
-        height: 68%;
-        top: 12%;
+        width: 86%;
+        height: 76%;
+        top: 8%;
         border-radius: 50%;
         background: radial-gradient(
           circle,
-          rgba(255, 230, 236, 0.22) 0%,
-          rgba(244, 143, 177, 0.1) 45%,
-          transparent 72%
+          rgba(255, 182, 213, 0.34) 0%,
+          rgba(168, 139, 255, 0.24) 44%,
+          rgba(48, 32, 79, 0.12) 66%,
+          transparent 78%
         );
-        filter: blur(22px);
-        opacity: 0;
-        transform: scale(0.82);
+        filter: blur(28px);
+        opacity: 0.72;
+        transform: scale(0.92);
         transition:
           opacity 1.8s ease,
           transform 1.8s ease,
@@ -302,19 +339,19 @@
       }
 
       .bouquet-showcase.aura-visible .bouquet-aura {
-        opacity: 1;
-        transform: scale(1);
+        opacity: 0.96;
+        transform: scale(1.04);
       }
 
       body.is-night .bouquet-showcase .bouquet-aura {
         opacity: 1;
-        transform: scale(1.12);
+        transform: scale(1.16);
         background: radial-gradient(
           circle,
-          rgba(244, 143, 177, 0.34) 0%,
-          rgba(253, 224, 71, 0.16) 38%,
-          rgba(56, 189, 248, 0.1) 62%,
-          transparent 78%
+          rgba(255, 182, 213, 0.44) 0%,
+          rgba(168, 139, 255, 0.32) 42%,
+          rgba(255, 245, 248, 0.14) 64%,
+          transparent 80%
         );
       }
 
@@ -327,6 +364,8 @@
         display: flex;
         align-items: center;
         justify-content: center;
+        filter: drop-shadow(0 0 22px rgba(255, 182, 213, 0.2))
+          drop-shadow(0 0 44px rgba(168, 139, 255, 0.16));
         transition: filter 1.6s ease;
       }
 
@@ -337,8 +376,8 @@
       }
 
       body.is-night .bouquet-svg-wrapper {
-        filter: drop-shadow(0 0 28px rgba(244, 143, 177, 0.28))
-          drop-shadow(0 0 60px rgba(254, 240, 138, 0.14));
+        filter: drop-shadow(0 0 32px rgba(255, 182, 213, 0.38))
+          drop-shadow(0 0 68px rgba(168, 139, 255, 0.28));
       }
 
       #bouquet-svg {
@@ -789,11 +828,11 @@
             <defs>
               <!-- Soft Drop Shadows & Glows -->
               <filter id="softFlowerShadow" x="-20%" y="-20%" width="140%" height="140%">
-                <feDropShadow dx="0" dy="3" stdDeviation="3.5" flood-color="#1b3b2b" flood-opacity="0.28" />
+                <feDropShadow dx="0" dy="3" stdDeviation="3.5" flood-color="#080D24" flood-opacity="0.38" />
               </filter>
 
               <filter id="wrapperShadow" x="-15%" y="-10%" width="130%" height="130%">
-                <feDropShadow dx="0" dy="10" stdDeviation="10" flood-color="#14291e" flood-opacity="0.32" />
+                <feDropShadow dx="0" dy="10" stdDeviation="12" flood-color="#080D24" flood-opacity="0.48" />
               </filter>
 
               <!-- Wrapping Paper Gradients matching the reference illustration -->
@@ -1560,15 +1599,16 @@
 
           this.petals = [];
           this.stars = [];
+          this.sparkles = [];
           this.floatingNotes = [];
 
           // Smoothly interpolated physics parameters via lerp()
           this.targetSpeedMultiplier = 1.0;
           this.currentSpeedMultiplier = 1.0;
-          this.targetPetalAlpha = 0.0;
-          this.currentPetalAlpha = 0.0;
-          this.targetNightBlend = 0.0;
-          this.currentNightBlend = 0.0;
+          this.targetPetalAlpha = 0.45;
+          this.currentPetalAlpha = 0.45;
+          this.targetNightBlend = 0.78;
+          this.currentNightBlend = 0.78;
 
           this.pointer = { x: -9999, y: -9999 };
           this.reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -1589,16 +1629,16 @@
         }
 
         initEntities() {
-          const petalColors = ['#FAD2DA', '#F497B6', '#FFFDF9', '#F0597A', '#FFE3EC'];
-          const petalCount = this.width < 768 ? 22 : 34;
+          const petalColors = ['#FFB6D5', '#FFF5F8', '#F497B6', '#F0597A', '#A88BFF'];
+          const petalCount = this.width < 768 ? 24 : 36;
 
           this.petals = Array.from({ length: petalCount }, (_, i) => ({
             id: i,
             x: Math.random() * this.width,
             y: Math.random() * this.height,
             vx: (Math.random() - 0.5) * 18,
-            vy: 18 + Math.random() * 22,
-            size: 5.5 + Math.random() * 5.5,
+            vy: 16 + Math.random() * 20,
+            size: 5.0 + Math.random() * 5.5,
             rot: Math.random() * Math.PI * 2,
             vRot: (Math.random() - 0.5) * 1.4,
             swayPhase: Math.random() * Math.PI * 2,
@@ -1606,13 +1646,27 @@
             radius: 26
           }));
 
-          const starCount = this.width < 768 ? 48 : 85;
-          this.stars = Array.from({ length: starCount }, () => ({
+          const starCount = this.width < 768 ? 68 : 120;
+          const starColors = ['#FFF5F8', '#FFB6D5', '#A88BFF', '#FDE68A'];
+          this.stars = Array.from({ length: starCount }, (_, i) => ({
             x: Math.random() * this.width,
-            y: Math.random() * (this.height * 0.78),
-            r: 0.7 + Math.random() * 1.6,
+            y: Math.random() * this.height,
+            r: 0.6 + Math.random() * 1.7,
             phase: Math.random() * Math.PI * 2,
-            speed: 0.8 + Math.random() * 1.8
+            speed: 0.7 + Math.random() * 1.9,
+            color: starColors[i % starColors.length]
+          }));
+
+          // Tiny glowing particles & stardust drifting around the bouquet
+          const sparkleCount = this.width < 768 ? 22 : 38;
+          this.sparkles = Array.from({ length: sparkleCount }, (_, i) => ({
+            x: this.width * (0.2 + Math.random() * 0.6),
+            y: this.height * (0.15 + Math.random() * 0.7),
+            r: 1.1 + Math.random() * 1.8,
+            phase: Math.random() * Math.PI * 2,
+            speed: 1.0 + Math.random() * 1.6,
+            vy: -6 - Math.random() * 10,
+            color: i % 2 === 0 ? '#FFB6D5' : '#A88BFF'
           }));
 
           // Floating micro-tags / firefly nodes that use Separation Algorithm
@@ -1640,8 +1694,8 @@
         }
 
         setStageMode({ petalsActive, nightMode }) {
-          this.targetPetalAlpha = petalsActive ? 0.88 : 0.0;
-          this.targetNightBlend = nightMode ? 1.0 : 0.0;
+          this.targetPetalAlpha = petalsActive ? 0.92 : 0.45;
+          this.targetNightBlend = nightMode ? 1.0 : 0.78;
           // Slow down floating petals gracefully in night mode
           this.targetSpeedMultiplier = nightMode ? 0.38 : 1.0;
         }
@@ -1749,28 +1803,57 @@
             n.x = lerp(n.x, anchorX + sepX, deltaTime * 2.4);
             n.y = lerp(n.y, anchorY + sepY, deltaTime * 2.4);
           }
+
+          // 3. Update Glowing Stardust Sparkles around the Bouquet
+          for (let i = 0; i < this.sparkles.length; i++) {
+            const sp = this.sparkles[i];
+            sp.phase += deltaTime * sp.speed;
+            sp.y += sp.vy * deltaTime * speedMult;
+            sp.x += Math.sin(sp.phase) * 8 * deltaTime;
+            if (sp.y < this.height * 0.08) {
+              sp.y = this.height * 0.85;
+              sp.x = this.width * (0.2 + Math.random() * 0.6);
+            }
+          }
         }
 
         draw(elapsedSec) {
           const ctx = this.ctx;
           ctx.clearRect(0, 0, this.width, this.height);
 
-          // 1. Draw Twinkling Night Stars when transitioning to Night Mode
-          if (this.currentNightBlend > 0.02) {
-            for (let i = 0; i < this.stars.length; i++) {
-              const s = this.stars[i];
-              const twinkle = 0.35 + 0.65 * ((Math.sin(elapsedSec * s.speed + s.phase) + 1) * 0.5);
-              ctx.save();
-              ctx.globalAlpha = twinkle * this.currentNightBlend;
-              ctx.fillStyle = i % 5 === 0 ? '#FDE68A' : '#F8FAFC';
-              ctx.beginPath();
-              ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
-              ctx.fill();
-              ctx.restore();
+          // 1. Draw Distant Galaxy Stars & Twinkling Constellations
+          for (let i = 0; i < this.stars.length; i++) {
+            const s = this.stars[i];
+            const twinkle = 0.3 + 0.7 * ((Math.sin(elapsedSec * s.speed + s.phase) + 1) * 0.5);
+            ctx.save();
+            ctx.globalAlpha = twinkle * this.currentNightBlend;
+            ctx.fillStyle = s.color;
+            if (s.r > 1.5) {
+              ctx.shadowColor = s.color;
+              ctx.shadowBlur = 6;
             }
+            ctx.beginPath();
+            ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.restore();
           }
 
-          // 2. Draw Drifting Flower Petals
+          // 2. Draw Tiny Glowing Stardust Particles around the Bouquet
+          for (let i = 0; i < this.sparkles.length; i++) {
+            const sp = this.sparkles[i];
+            const pulse = 0.25 + 0.75 * ((Math.sin(elapsedSec * sp.speed + sp.phase) + 1) * 0.5);
+            ctx.save();
+            ctx.globalAlpha = pulse * 0.82;
+            ctx.fillStyle = sp.color;
+            ctx.shadowColor = sp.color;
+            ctx.shadowBlur = 10;
+            ctx.beginPath();
+            ctx.arc(sp.x, sp.y, sp.r, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.restore();
+          }
+
+          // 3. Draw Drifting Flower Petals
           if (this.currentPetalAlpha > 0.02) {
             for (let i = 0; i < this.petals.length; i++) {
               const p = this.petals[i];
@@ -1884,7 +1967,7 @@
           this.isTransitioningToSleep = false;
 
           document.body.classList.remove('is-night');
-          this.themeColorMeta.setAttribute('content', '#4E7262');
+          this.themeColorMeta.setAttribute('content', '#080D24');
 
           this.bouquetShowcase.classList.remove('aura-visible');
           this.bouquetSvg.classList.remove('swaying');
@@ -2013,7 +2096,7 @@
 
           // 2 & 3. Make bouquet glow softly & slow down floating petals
           document.body.classList.add('is-night');
-          this.themeColorMeta.setAttribute('content', '#091124');
+          this.themeColorMeta.setAttribute('content', '#080D24');
           this.stageLabel.textContent = CONFIG.stageLabels.night;
           this.canvasEngine.setStageMode({ petalsActive: true, nightMode: true });
 

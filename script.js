@@ -487,14 +487,15 @@ class AmbientCanvasEngine {
 
     this.petals = [];
     this.stars = [];
+    this.sparkles = [];
     this.floatingNotes = [];
 
     this.targetSpeedMultiplier = 1.0;
     this.currentSpeedMultiplier = 1.0;
-    this.targetPetalAlpha = 0.0;
-    this.currentPetalAlpha = 0.0;
-    this.targetNightBlend = 0.0;
-    this.currentNightBlend = 0.0;
+    this.targetPetalAlpha = 0.45;
+    this.currentPetalAlpha = 0.45;
+    this.targetNightBlend = 0.78;
+    this.currentNightBlend = 0.78;
 
     this.pointer = { x: -9999, y: -9999 };
     this.reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -515,16 +516,16 @@ class AmbientCanvasEngine {
   }
 
   initEntities() {
-    const petalColors = ['#FAD2DA', '#F497B6', '#FFFDF9', '#F0597A', '#FFE3EC'];
-    const petalCount = this.width < 768 ? 22 : 34;
+    const petalColors = ['#FFB6D5', '#FFF5F8', '#F497B6', '#F0597A', '#A88BFF'];
+    const petalCount = this.width < 768 ? 24 : 36;
 
     this.petals = Array.from({ length: petalCount }, (_, i) => ({
       id: i,
       x: Math.random() * this.width,
       y: Math.random() * this.height,
       vx: (Math.random() - 0.5) * 18,
-      vy: 18 + Math.random() * 22,
-      size: 5.5 + Math.random() * 5.5,
+      vy: 16 + Math.random() * 20,
+      size: 5.0 + Math.random() * 5.5,
       rot: Math.random() * Math.PI * 2,
       vRot: (Math.random() - 0.5) * 1.4,
       swayPhase: Math.random() * Math.PI * 2,
@@ -532,13 +533,26 @@ class AmbientCanvasEngine {
       radius: 26
     }));
 
-    const starCount = this.width < 768 ? 48 : 85;
-    this.stars = Array.from({ length: starCount }, () => ({
+    const starCount = this.width < 768 ? 68 : 120;
+    const starColors = ['#FFF5F8', '#FFB6D5', '#A88BFF', '#FDE68A'];
+    this.stars = Array.from({ length: starCount }, (_, i) => ({
       x: Math.random() * this.width,
-      y: Math.random() * (this.height * 0.78),
-      r: 0.7 + Math.random() * 1.6,
+      y: Math.random() * this.height,
+      r: 0.6 + Math.random() * 1.7,
       phase: Math.random() * Math.PI * 2,
-      speed: 0.8 + Math.random() * 1.8
+      speed: 0.7 + Math.random() * 1.9,
+      color: starColors[i % starColors.length]
+    }));
+
+    const sparkleCount = this.width < 768 ? 22 : 38;
+    this.sparkles = Array.from({ length: sparkleCount }, (_, i) => ({
+      x: this.width * (0.2 + Math.random() * 0.6),
+      y: this.height * (0.15 + Math.random() * 0.7),
+      r: 1.1 + Math.random() * 1.8,
+      phase: Math.random() * Math.PI * 2,
+      speed: 1.0 + Math.random() * 1.6,
+      vy: -6 - Math.random() * 10,
+      color: i % 2 === 0 ? '#FFB6D5' : '#A88BFF'
     }));
   }
 
@@ -551,8 +565,8 @@ class AmbientCanvasEngine {
   }
 
   setStageMode({ petalsActive, nightMode }) {
-    this.targetPetalAlpha = petalsActive ? 0.88 : 0.0;
-    this.targetNightBlend = nightMode ? 1.0 : 0.0;
+    this.targetPetalAlpha = petalsActive ? 0.92 : 0.45;
+    this.targetNightBlend = nightMode ? 1.0 : 0.78;
     this.targetSpeedMultiplier = nightMode ? 0.38 : 1.0;
   }
 
@@ -627,24 +641,51 @@ class AmbientCanvasEngine {
       if (p.x < -25) p.x = this.width + 20;
       if (p.x > this.width + 25) p.x = -20;
     }
+
+    for (let i = 0; i < this.sparkles.length; i++) {
+      const sp = this.sparkles[i];
+      sp.phase += deltaTime * sp.speed;
+      sp.y += sp.vy * deltaTime * speedMult;
+      sp.x += Math.sin(sp.phase) * 8 * deltaTime;
+      if (sp.y < this.height * 0.08) {
+        sp.y = this.height * 0.85;
+        sp.x = this.width * (0.2 + Math.random() * 0.6);
+      }
+    }
   }
 
   draw(elapsedSec) {
     const ctx = this.ctx;
     ctx.clearRect(0, 0, this.width, this.height);
 
-    if (this.currentNightBlend > 0.02) {
-      for (let i = 0; i < this.stars.length; i++) {
-        const s = this.stars[i];
-        const twinkle = 0.35 + 0.65 * ((Math.sin(elapsedSec * s.speed + s.phase) + 1) * 0.5);
-        ctx.save();
-        ctx.globalAlpha = twinkle * this.currentNightBlend;
-        ctx.fillStyle = i % 5 === 0 ? '#FDE68A' : '#F8FAFC';
-        ctx.beginPath();
-        ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.restore();
+    for (let i = 0; i < this.stars.length; i++) {
+      const s = this.stars[i];
+      const twinkle = 0.3 + 0.7 * ((Math.sin(elapsedSec * s.speed + s.phase) + 1) * 0.5);
+      ctx.save();
+      ctx.globalAlpha = twinkle * this.currentNightBlend;
+      ctx.fillStyle = s.color;
+      if (s.r > 1.5) {
+        ctx.shadowColor = s.color;
+        ctx.shadowBlur = 6;
       }
+      ctx.beginPath();
+      ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+    }
+
+    for (let i = 0; i < this.sparkles.length; i++) {
+      const sp = this.sparkles[i];
+      const pulse = 0.25 + 0.75 * ((Math.sin(elapsedSec * sp.speed + sp.phase) + 1) * 0.5);
+      ctx.save();
+      ctx.globalAlpha = pulse * 0.82;
+      ctx.fillStyle = sp.color;
+      ctx.shadowColor = sp.color;
+      ctx.shadowBlur = 10;
+      ctx.beginPath();
+      ctx.arc(sp.x, sp.y, sp.r, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
     }
 
     if (this.currentPetalAlpha > 0.02) {
@@ -753,7 +794,7 @@ class BloomExperienceController {
     this.isTransitioningToSleep = false;
 
     document.body.classList.remove('is-night');
-    this.themeColorMeta.setAttribute('content', '#4E7262');
+    this.themeColorMeta.setAttribute('content', '#080D24');
 
     this.bouquetShowcase.classList.remove('aura-visible');
     this.bouquetSvg.classList.remove('swaying');
@@ -872,7 +913,7 @@ class BloomExperienceController {
     this.confirmSleepBtn.disabled = true;
 
     document.body.classList.add('is-night');
-    this.themeColorMeta.setAttribute('content', '#091124');
+    this.themeColorMeta.setAttribute('content', '#080D24');
     this.stageLabel.textContent = CONFIG.stageLabels.night;
     this.canvasEngine.setStageMode({ petalsActive: true, nightMode: true });
 

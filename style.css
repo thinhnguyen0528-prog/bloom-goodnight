@@ -1,21 +1,25 @@
 :root {
-  --bg-sage-top: #557b6a;
-  --bg-sage-mid: #4c7060;
-  --bg-sage-bottom: #3d5c4e;
-  --bg-night-top: #070c1a;
-  --bg-night-mid: #0f172a;
-  --bg-night-bottom: #17233f;
+  --galaxy-navy: #080d24;
+  --galaxy-indigo: #171735;
+  --galaxy-purple: #30204f;
+  --soft-pink: #ffb6d5;
+  --warm-white: #fff5f8;
+  --lavender-glow: #a88bff;
 
-  --glass-bg: rgba(15, 23, 42, 0.75);
-  --glass-bg-soft: rgba(15, 23, 42, 0.68);
-  --glass-border: rgba(255, 255, 255, 0.12);
-  --glass-highlight: rgba(255, 255, 255, 0.22);
+  --bg-night-top: #050817;
+  --bg-night-mid: #080d24;
+  --bg-night-bottom: #171735;
 
-  --text-primary: #f8fafc;
-  --text-secondary: rgba(241, 245, 249, 0.86);
-  --text-muted: rgba(226, 232, 240, 0.68);
+  --glass-bg: rgba(15, 18, 42, 0.72);
+  --glass-bg-soft: rgba(23, 23, 53, 0.66);
+  --glass-border: rgba(255, 182, 213, 0.18);
+  --glass-highlight: rgba(168, 139, 255, 0.34);
 
-  --accent-pink: #f48fb1;
+  --text-primary: #fff5f8;
+  --text-secondary: rgba(255, 245, 248, 0.88);
+  --text-muted: rgba(255, 182, 213, 0.74);
+
+  --accent-pink: #ffb6d5;
   --accent-coral: #f0597a;
   --accent-warm: #ffd166;
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
@@ -36,7 +40,7 @@ body {
   overflow-x: hidden;
   font-family: 'Plus Jakarta Sans', sans-serif;
   color: var(--text-primary);
-  background-color: var(--bg-sage-mid);
+  background-color: var(--galaxy-navy);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -56,29 +60,59 @@ body {
 }
 
 .bg-sage {
-  background: radial-gradient(
-      circle at 50% 34%,
-      rgba(116, 158, 138, 0.42) 0%,
-      rgba(78, 114, 98, 0.15) 48%,
-      transparent 75%
+  background:
+    radial-gradient(
+      circle at 28% 24%,
+      rgba(168, 139, 255, 0.22) 0%,
+      rgba(48, 32, 79, 0.18) 38%,
+      transparent 68%
     ),
-    linear-gradient(180deg, var(--bg-sage-top) 0%, var(--bg-sage-mid) 52%, var(--bg-sage-bottom) 100%);
+    radial-gradient(
+      circle at 72% 32%,
+      rgba(255, 182, 213, 0.18) 0%,
+      rgba(168, 139, 255, 0.1) 42%,
+      transparent 70%
+    ),
+    radial-gradient(
+      ellipse at 50% 55%,
+      rgba(48, 32, 79, 0.65) 0%,
+      rgba(23, 23, 53, 0.4) 55%,
+      transparent 85%
+    ),
+    linear-gradient(
+      180deg,
+      var(--galaxy-navy) 0%,
+      var(--galaxy-indigo) 50%,
+      var(--galaxy-purple) 100%
+    );
   opacity: 1;
 }
 
 .bg-night {
-  background: radial-gradient(
-      circle at 50% 30%,
-      rgba(56, 189, 248, 0.09) 0%,
-      rgba(244, 114, 182, 0.07) 36%,
+  background:
+    radial-gradient(
+      circle at 50% 34%,
+      rgba(168, 139, 255, 0.26) 0%,
+      rgba(255, 182, 213, 0.16) 36%,
       transparent 70%
     ),
-    linear-gradient(180deg, var(--bg-night-top) 0%, var(--bg-night-mid) 54%, var(--bg-night-bottom) 100%);
+    radial-gradient(
+      circle at 80% 18%,
+      rgba(255, 245, 248, 0.1) 0%,
+      transparent 50%
+    ),
+    linear-gradient(
+      180deg,
+      var(--bg-night-top) 0%,
+      var(--galaxy-navy) 48%,
+      var(--galaxy-indigo) 82%,
+      var(--galaxy-purple) 100%
+    );
   opacity: 0;
 }
 
 body.is-night .bg-sage {
-  opacity: 0;
+  opacity: 0.25;
 }
 
 body.is-night .bg-night {
@@ -99,16 +133,17 @@ body.is-night .bg-night {
   inset: 0;
   z-index: 1;
   pointer-events: none;
-  opacity: 0;
-  transform: translateY(14px);
+  opacity: 0.9;
+  transform: translateY(0);
   transition:
     opacity 2.4s cubic-bezier(0.22, 1, 0.36, 1),
-    transform 2.4s cubic-bezier(0.22, 1, 0.36, 1);
+    transform 2.4s cubic-bezier(0.22, 1, 0.36, 1),
+    filter 2.4s ease;
 }
 
 body.is-night .night-sky-decor {
   opacity: 1;
-  transform: translateY(0);
+  filter: drop-shadow(0 0 18px rgba(255, 182, 213, 0.35));
 }
 
 .crescent-moon-wrapper {
@@ -117,7 +152,8 @@ body.is-night .night-sky-decor {
   right: clamp(1.5rem, 8vw, 7rem);
   width: clamp(64px, 9vw, 92px);
   height: clamp(64px, 9vw, 92px);
-  filter: drop-shadow(0 0 24px rgba(254, 243, 199, 0.45));
+  filter: drop-shadow(0 0 28px rgba(255, 245, 248, 0.55))
+    drop-shadow(0 0 54px rgba(168, 139, 255, 0.4));
   animation: moonFloat 7s ease-in-out infinite alternate;
 }
 
@@ -246,19 +282,20 @@ body.is-night .night-sky-decor {
 
 .bouquet-aura {
   position: absolute;
-  width: 78%;
-  height: 68%;
-  top: 12%;
+  width: 86%;
+  height: 76%;
+  top: 8%;
   border-radius: 50%;
   background: radial-gradient(
     circle,
-    rgba(255, 230, 236, 0.22) 0%,
-    rgba(244, 143, 177, 0.1) 45%,
-    transparent 72%
+    rgba(255, 182, 213, 0.34) 0%,
+    rgba(168, 139, 255, 0.24) 44%,
+    rgba(48, 32, 79, 0.12) 66%,
+    transparent 78%
   );
-  filter: blur(22px);
-  opacity: 0;
-  transform: scale(0.82);
+  filter: blur(28px);
+  opacity: 0.72;
+  transform: scale(0.92);
   transition:
     opacity 1.8s ease,
     transform 1.8s ease,
@@ -267,19 +304,19 @@ body.is-night .night-sky-decor {
 }
 
 .bouquet-showcase.aura-visible .bouquet-aura {
-  opacity: 1;
-  transform: scale(1);
+  opacity: 0.96;
+  transform: scale(1.04);
 }
 
 body.is-night .bouquet-showcase .bouquet-aura {
   opacity: 1;
-  transform: scale(1.12);
+  transform: scale(1.16);
   background: radial-gradient(
     circle,
-    rgba(244, 143, 177, 0.34) 0%,
-    rgba(253, 224, 71, 0.16) 38%,
-    rgba(56, 189, 248, 0.1) 62%,
-    transparent 78%
+    rgba(255, 182, 213, 0.44) 0%,
+    rgba(168, 139, 255, 0.32) 42%,
+    rgba(255, 245, 248, 0.14) 64%,
+    transparent 80%
   );
 }
 
@@ -291,6 +328,8 @@ body.is-night .bouquet-showcase .bouquet-aura {
   display: flex;
   align-items: center;
   justify-content: center;
+  filter: drop-shadow(0 0 22px rgba(255, 182, 213, 0.2))
+    drop-shadow(0 0 44px rgba(168, 139, 255, 0.16));
   transition: filter 1.6s ease;
 }
 
@@ -301,8 +340,8 @@ body.is-night .bouquet-showcase .bouquet-aura {
 }
 
 body.is-night .bouquet-svg-wrapper {
-  filter: drop-shadow(0 0 28px rgba(244, 143, 177, 0.28))
-    drop-shadow(0 0 60px rgba(254, 240, 138, 0.14));
+  filter: drop-shadow(0 0 32px rgba(255, 182, 213, 0.38))
+    drop-shadow(0 0 68px rgba(168, 139, 255, 0.28));
 }
 
 #bouquet-svg {
